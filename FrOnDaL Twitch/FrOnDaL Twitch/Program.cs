@@ -337,11 +337,19 @@ namespace FrOnDaL_Twitch
                 }
             }                      
         }
-        private static void QafterKill(GameNotifyEventArgs afterKill)
+        private static void QafterKill(GameNotifyEventArgs args)
         {
-            if (_q.IsReady() && _combo["Qafterkill"].Cast<CheckBox>().CurrentValue && (afterKill.NetworkId == Twitch.NetworkId) && (afterKill.EventId == GameEventId.OnChampionKill))
+
+            if (_combo["Qafterkill"].Cast<CheckBox>().CurrentValue && (args.NetworkId == Player.Instance.NetworkId) && (args.EventId == GameEventId.OnChampionKill))
             {               
-                Core.DelayAction(() => { if (EntityManager.Heroes.Enemies.Any(x => x.IsValidTarget(1500))) { _q.Cast(); } }, 150);
+                Core.DelayAction(() =>
+                {
+                    var CachedEnemies = EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(1500));
+                    if (CachedEnemies != null)
+                    {                      
+                        _q.Cast();
+                    }
+                }, 150);
             }
         }
         public static int StacksPassive(Obj_AI_Base obj)
@@ -379,7 +387,7 @@ namespace FrOnDaL_Twitch
                 var temelHit = new float[] { 15, 20, 25, 30, 35 }[temel];
                 var ekstraHasarD = 0.25f * Twitch.FlatPhysicalDamageMod;
                 var ekstraHasarP = 0.20f * Twitch.TotalMagicalDamage;
-                temelDamage = temelDeger + ((temelHit + ekstraHasarD + ekstraHasarP + 5) * StacksPassive(obj));
+                temelDamage = temelDeger + ((temelHit + ekstraHasarD + ekstraHasarP + 1) * StacksPassive(obj));
             }
             return Twitch.CalculateDamageOnUnit(obj, DamageType.Physical, temelDamage);
         }
