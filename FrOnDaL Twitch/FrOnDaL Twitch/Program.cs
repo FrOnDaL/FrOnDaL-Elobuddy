@@ -343,9 +343,8 @@ namespace FrOnDaL_Twitch
             if (_combo["Qafterkill"].Cast<CheckBox>().CurrentValue && (args.NetworkId == Player.Instance.NetworkId) && (args.EventId == GameEventId.OnChampionKill))
             {               
                 Core.DelayAction(() =>
-                {
-                    var CachedEnemies = EntityManager.Heroes.Enemies.Where(x => x.IsValidTarget(1500));
-                    if (CachedEnemies != null)
+                {                  
+                    if (EntityManager.Heroes.Enemies.Any(x => x.IsValidTarget(1500)))
                     {                      
                         _q.Cast();
                     }
